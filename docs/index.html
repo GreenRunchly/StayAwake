@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StayAwake — Lightweight macOS Menu Bar Utility</title>
+  <meta name="description" content="A lightweight macOS menu bar utility to keep your Mac awake (caffeinate), manage System SleepDisabled, and toggle Intel Turbo Boost." />
+  <style>
+    :root {
+      --bg: #0b0d12;
+      --surface: #131722;
+      --surface-2: #1a2030;
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #f3f5f8;
+      --muted: #9aa4b2;
+      --accent: #3b82f6;
+      --accent-glow: rgba(59, 130, 246, 0.25);
+      --green: #22c55e;
+      --amber: #f59e0b;
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+      background:
+        radial-gradient(900px 500px at 50% -10%, rgba(59, 130, 246, 0.16), transparent 60%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Nav */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      background: rgba(11, 13, 18, 0.72);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3px 9px;
+      border-radius: 8px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 84px 0 64px;
+      text-align: center;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-size: 0.84rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 10px var(--green);
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      max-width: 650px;
+      margin: 0 auto 34px;
+      font-size: 1.12rem;
+      color: var(--muted);
+    }
+
+    .cta-group {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 56px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 8px 28px var(--accent-glow);
+    }
+
+    .btn-primary:hover {
+      background: #2563eb;
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--surface-2);
+    }
+
+    /* macOS Menu Bar Mockup */
+    .mockup-wrap {
+      max-width: 520px;
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    .menubar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 14px;
+      padding: 8px 16px;
+      background: rgba(26, 32, 48, 0.9);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .menubar-icon {
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: rgba(59, 130, 246, 0.2);
+      color: #93c5fd;
+      font-weight: 700;
+      border: 1px solid rgba(59, 130, 246, 0.35);
+    }
+
+    .menu-card {
+      width: 280px;
+      margin-left: auto;
+      background: rgba(22, 27, 38, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 6px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+      font-size: 0.88rem;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      border-radius: 8px;
+      color: var(--text);
+    }
+
+    .menu-item.active {
+      background: var(--accent);
+    }
+
+    .menu-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 5px 8px;
+    }
+
+    .menu-tag {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .menu-item.active .menu-tag {
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    /* Sections */
+    section {
+      padding: 56px 0;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 750;
+      letter-spacing: -0.025em;
+      margin-bottom: 10px;
+    }
+
+    .section-sub {
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    /* Features Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+
+    .card-icon {
+      font-size: 1.4rem;
+      margin-bottom: 12px;
+    }
+
+    .card h3 {
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.85em;
+      background: var(--surface-2);
+      padding: 2px 6px;
+      border-radius: 6px;
+      color: #bfdbfe;
+    }
+
+    /* Build Box */
+    .build-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    pre {
+      background: #07090d;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.88rem;
+      color: #dbeafe;
+      line-height: 1.7;
+    }
+
+    .req-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .req-list li::before {
+      content: "✓ ";
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+      margin-top: 40px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .footer-inner a {
+      color: var(--text);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    @media (max-width: 760px) {
+      .build-box {
+        grid-template-columns: 1fr;
+      }
+      .nav-links {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a href="#" class="brand">
+        <span class="brand-badge">Zzz</span>
+        <span>StayAwake</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#build">Build</a>
+        <a href="https://github.com/GreenRunchly/StayAwake" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="pill">
+        <span class="pill-dot"></span>
+        Lightweight macOS Menu Bar Utility
+      </div>
+      <h1>Keep your Mac awake.<br />Right from the menu bar.</h1>
+      <p>
+        Control <code>caffeinate</code>, manage <code>System SleepDisabled</code>, and toggle Intel Turbo Boost—all from a single, minimal <code>Zzz</code> icon.
+      </p>
+
+      <div class="cta-group">
+        <a class="btn btn-primary" href="https://github.com/GreenRunchly/StayAwake" target="_blank" rel="noopener">
+          View on GitHub
+        </a>
+        <a class="btn btn-secondary" href="#build">
+          Build from Source
+        </a>
+      </div>
+
+      <div class="mockup-wrap" aria-label="StayAwake menu bar preview">
+        <div class="menubar">
+          <span>Wi-Fi</span>
+          <span>100%</span>
+          <span class="menubar-icon">Zzz</span>
+          <span>Tue 8:02 PM</span>
+        </div>
+        <div class="menu-card">
+          <div class="menu-item active">
+            <span>Stay Awake (caffeinate)</span>
+            <span class="menu-tag">ON</span>
+          </div>
+          <div class="menu-divider"></div>
+          <div class="menu-item">
+            <span>System SleepDisabled</span>
+            <span class="menu-tag">pmset</span>
+          </div>
+          <div class="menu-item">
+            <span>Disable Turbo Boost</span>
+            <span class="menu-tag">kext</span>
+          </div>
+          <div class="menu-item">
+            <span>Launch at Login</span>
+            <span class="menu-tag">✓</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features">
+      <h2 class="section-title">Features</h2>
+      <p class="section-sub">Simple controls without the bloat.</p>
+
+      <div class="grid">
+        <div class="card">
+          <div class="card-icon">☕</div>
+          <h3>Left-Click Toggle</h3>
+          <p>Instantly enable or disable <code>caffeinate -i -m -s</code> with a single click—no password prompt required.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">💻</div>
+          <h3>System SleepDisabled</h3>
+          <p>Toggle <code>pmset -a disablesleep 1/0</code> from the right-click menu so closing the lid won't sleep your Mac.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">❄️</div>
+          <h3>Disable Turbo Boost</h3>
+          <p>Load or unload <code>DisableTurboBoost.64bits.kext</code> to keep Intel MacBooks cooler and quieter.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">🔐</div>
+          <h3>One-Time Setup</h3>
+          <p>Configures <code>/etc/sudoers.d/stayawake</code> on first privileged action so future toggles need no password.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="build">
+      <div class="build-box">
+        <div>
+          <h2 class="section-title">Requirements &amp; Build</h2>
+          <p class="section-sub" style="margin-bottom: 18px;">
+            Compile locally in seconds using Xcode Command Line Tools.
+          </p>
+          <ul class="req-list">
+            <li>macOS (tested on macOS 13 Ventura, Intel x86_64)</li>
+            <li>Xcode Command Line Tools (<code>swiftc</code>)</li>
+            <li>Optional: <code>DisableTurboBoost.64bits.kext</code> for Turbo Boost toggle</li>
+          </ul>
+        </div>
+        <pre><code>git clone https://github.com/GreenRunchly/StayAwake.git
+cd StayAwake
+chmod +x build.sh
+./build.sh
+open StayAwake.app</code></pre>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <span>StayAwake — Open-source macOS menu bar utility</span>
+      <span>
+        Turbo Boost kext credits:
+        <a href="https://github.com/rugarciap/Turbo-Boost-Switcher" target="_blank" rel="noopener">Turbo Boost Switcher</a>
+        ·
+        <a href="https://github.com/GreenRunchly/StayAwake" target="_blank" rel="noopener">GitHub Repo</a>
+      </span>
+    </div>
+  </footer>
+</body>
+</html>
