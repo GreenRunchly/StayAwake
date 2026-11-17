@@ -3,8 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StayAwake — Lightweight macOS Menu Bar Utility</title>
-  <meta name="description" content="A lightweight macOS menu bar utility to keep your Mac awake (caffeinate), manage System SleepDisabled, and toggle Intel Turbo Boost." />
+  <title>StayAwake — Keep Your Mac Awake from the Menu Bar</title>
+  <meta name="description" content="Stop your Mac from falling asleep during downloads, presentations, or long tasks—all from one simple Zzz icon in your menu bar." />
+  <meta name="keywords" content="StayAwake, macOS, menu bar, keep Mac awake, caffeinate, prevent sleep, Turbo Boost, Mac utility" />
+  <meta name="author" content="GreenRunchly" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0b0d12" />
+  <link rel="canonical" href="https://greenrunchly.github.io/StayAwake/" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://greenrunchly.github.io/StayAwake/" />
+  <meta property="og:site_name" content="StayAwake" />
+  <meta property="og:title" content="StayAwake — Keep Your Mac Awake from the Menu Bar" />
+  <meta property="og:description" content="Stop your Mac from falling asleep during downloads, presentations, or long tasks—all from one simple Zzz icon in your menu bar." />
+  <meta property="og:image" content="https://greenrunchly.github.io/StayAwake/screenshot.jpg" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://greenrunchly.github.io/StayAwake/" />
+  <meta name="twitter:title" content="StayAwake — Keep Your Mac Awake from the Menu Bar" />
+  <meta name="twitter:description" content="Stop your Mac from falling asleep during downloads, presentations, or long tasks—all from one simple Zzz icon in your menu bar." />
+  <meta name="twitter:image" content="https://greenrunchly.github.io/StayAwake/screenshot.jpg" />
+
+  <link rel="icon" type="image/png" href="app-icon.png" />
   <style>
     :root {
       --bg: #0b0d12;
@@ -78,17 +100,11 @@
       letter-spacing: -0.02em;
     }
 
-    .brand-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 3px 9px;
-      border-radius: 8px;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--accent);
+    .brand-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      object-fit: cover;
     }
 
     .nav-links {
@@ -103,9 +119,27 @@
       color: var(--text);
     }
 
+    .nav-download {
+      padding: 6px 14px;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #fff !important;
+      font-weight: 600;
+      font-size: 0.86rem;
+    }
+
+    .nav-download:hover {
+      background: #2563eb;
+    }
+
     /* Hero */
     .hero {
-      padding: 84px 0 64px;
+      min-height: calc(100vh - 64px);
+      min-height: calc(100svh - 64px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 48px 0;
       text-align: center;
     }
 
@@ -287,6 +321,8 @@
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 24px;
+      min-width: 0;
+      overflow-wrap: break-word;
     }
 
     .card-icon {
@@ -311,6 +347,8 @@
       padding: 2px 6px;
       border-radius: 6px;
       color: #bfdbfe;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
 
     /* Build Box */
@@ -320,9 +358,13 @@
       border-radius: var(--radius);
       padding: 28px;
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       gap: 28px;
       align-items: center;
+    }
+
+    .build-box > * {
+      min-width: 0;
     }
 
     pre {
@@ -330,11 +372,22 @@
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 18px;
+      max-width: 100%;
       overflow-x: auto;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       font-size: 0.88rem;
       color: #dbeafe;
       line-height: 1.7;
+    }
+
+    pre code {
+      background: transparent;
+      padding: 0;
+      border-radius: 0;
+      color: inherit;
+      font-size: inherit;
+      overflow-wrap: normal;
+      word-break: normal;
     }
 
     .req-list {
@@ -378,8 +431,13 @@
       .build-box {
         grid-template-columns: 1fr;
       }
-      .nav-links {
+      .nav-links a:not(.nav-github) {
         display: none;
+      }
+      .card {
+        background: transparent;
+        border: none;
+        padding: 12px 0;
       }
     }
   </style>
@@ -388,115 +446,57 @@
   <header>
     <div class="container nav">
       <a href="#" class="brand">
-        <span class="brand-badge">Zzz</span>
+        <img src="app-icon.png" alt="StayAwake" class="brand-icon" />
         <span>StayAwake</span>
       </a>
       <nav class="nav-links">
         <a href="#features">Features</a>
-        <a href="#build">Build</a>
-        <a href="https://github.com/GreenRunchly/StayAwake" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/GreenRunchly/StayAwake" target="_blank" rel="noopener" class="nav-github">GitHub</a>
+        <a href="https://github.com/GreenRunchly/StayAwake/releases/latest" target="_blank" rel="noopener" class="nav-download">Download</a>
       </nav>
     </div>
   </header>
 
   <main class="container">
     <section class="hero">
-      <div class="pill">
-        <span class="pill-dot"></span>
-        Lightweight macOS Menu Bar Utility
-      </div>
       <h1>Keep your Mac awake.<br />Right from the menu bar.</h1>
       <p>
-        Control <code>caffeinate</code>, manage <code>System SleepDisabled</code>, and toggle Intel Turbo Boost—all from a single, minimal <code>Zzz</code> icon.
+        Stop your Mac from falling asleep during downloads, presentations, or long tasks—all from one simple <span style="display:inline-flex;align-items:center;vertical-align:middle;padding:2px 6px;border-radius:6px;background:var(--surface-2);border:1px solid var(--border);" aria-label="Zzz menu bar icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3h7l-7 8h7"/><path d="M14 9h6l-6 7h6"/><path d="M7 15h5l-5 6h5"/></svg></span> icon in your menu bar.
       </p>
 
       <div class="cta-group">
-        <a class="btn btn-primary" href="https://github.com/GreenRunchly/StayAwake" target="_blank" rel="noopener">
+        <a class="btn btn-primary" href="https://github.com/GreenRunchly/StayAwake/releases/latest" target="_blank" rel="noopener">
+          <i data-lucide="download" style="width: 18px; height: 18px;"></i>
+          Download for macOS
+        </a>
+        <a class="btn btn-secondary" href="https://github.com/GreenRunchly/StayAwake" target="_blank" rel="noopener">
           View on GitHub
         </a>
-        <a class="btn btn-secondary" href="#build">
-          Build from Source
-        </a>
-      </div>
-
-      <div class="mockup-wrap" aria-label="StayAwake menu bar preview">
-        <div class="menubar">
-          <span>Wi-Fi</span>
-          <span>100%</span>
-          <span class="menubar-icon">Zzz</span>
-          <span>Tue 8:02 PM</span>
-        </div>
-        <div class="menu-card">
-          <div class="menu-item active">
-            <span>Stay Awake (caffeinate)</span>
-            <span class="menu-tag">ON</span>
-          </div>
-          <div class="menu-divider"></div>
-          <div class="menu-item">
-            <span>System SleepDisabled</span>
-            <span class="menu-tag">pmset</span>
-          </div>
-          <div class="menu-item">
-            <span>Disable Turbo Boost</span>
-            <span class="menu-tag">kext</span>
-          </div>
-          <div class="menu-item">
-            <span>Launch at Login</span>
-            <span class="menu-tag">✓</span>
-          </div>
-        </div>
       </div>
     </section>
 
     <section id="features">
-      <h2 class="section-title">Features</h2>
-      <p class="section-sub">Simple controls without the bloat.</p>
+      <h2 class="section-title">What It Does</h2>
+      <p class="section-sub">Everything you need, nothing you don't.</p>
 
       <div class="grid">
         <div class="card">
-          <div class="card-icon">☕</div>
-          <h3>Left-Click Toggle</h3>
-          <p>Instantly enable or disable <code>caffeinate -i -m -s</code> with a single click—no password prompt required.</p>
+          <div class="card-icon"><i data-lucide="coffee"></i></div>
+          <h3>One-Click Awake</h3>
+          <p>Click the <span style="display:inline-flex;align-items:center;vertical-align:middle;padding:2px 6px;border-radius:6px;background:var(--surface-2);border:1px solid var(--border);" aria-label="Zzz menu bar icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3h7l-7 8h7"/><path d="M14 9h6l-6 7h6"/><path d="M7 15h5l-5 6h5"/></svg></span> icon once to keep your screen and Mac awake. Click again to turn it off—no password needed.</p>
         </div>
 
         <div class="card">
-          <div class="card-icon">💻</div>
-          <h3>System SleepDisabled</h3>
-          <p>Toggle <code>pmset -a disablesleep 1/0</code> from the right-click menu so closing the lid won't sleep your Mac.</p>
+          <div class="card-icon"><i data-lucide="laptop"></i></div>
+          <h3>Keep Running with Lid Closed</h3>
+          <p>Right-click the icon to stop your Mac from sleeping even when you close your laptop lid.</p>
         </div>
 
         <div class="card">
-          <div class="card-icon">❄️</div>
-          <h3>Disable Turbo Boost</h3>
-          <p>Load or unload <code>DisableTurboBoost.64bits.kext</code> to keep Intel MacBooks cooler and quieter.</p>
+          <div class="card-icon"><i data-lucide="snowflake"></i></div>
+          <h3>Cooler &amp; Quieter Mac</h3>
+          <p>Optionally turn off Intel Turbo Boost from the menu to reduce heat and fan noise on Intel MacBooks.</p>
         </div>
-
-        <div class="card">
-          <div class="card-icon">🔐</div>
-          <h3>One-Time Setup</h3>
-          <p>Configures <code>/etc/sudoers.d/stayawake</code> on first privileged action so future toggles need no password.</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="build">
-      <div class="build-box">
-        <div>
-          <h2 class="section-title">Requirements &amp; Build</h2>
-          <p class="section-sub" style="margin-bottom: 18px;">
-            Compile locally in seconds using Xcode Command Line Tools.
-          </p>
-          <ul class="req-list">
-            <li>macOS (tested on macOS 13 Ventura, Intel x86_64)</li>
-            <li>Xcode Command Line Tools (<code>swiftc</code>)</li>
-            <li>Optional: <code>DisableTurboBoost.64bits.kext</code> for Turbo Boost toggle</li>
-          </ul>
-        </div>
-        <pre><code>git clone https://github.com/GreenRunchly/StayAwake.git
-cd StayAwake
-chmod +x build.sh
-./build.sh
-open StayAwake.app</code></pre>
       </div>
     </section>
   </main>
@@ -505,12 +505,13 @@ open StayAwake.app</code></pre>
     <div class="container footer-inner">
       <span>StayAwake — Open-source macOS menu bar utility</span>
       <span>
-        Turbo Boost kext credits:
-        <a href="https://github.com/rugarciap/Turbo-Boost-Switcher" target="_blank" rel="noopener">Turbo Boost Switcher</a>
-        ·
-        <a href="https://github.com/GreenRunchly/StayAwake" target="_blank" rel="noopener">GitHub Repo</a>
+        <a href="https://github.com/GreenRunchly/StayAwake" target="_blank" rel="noopener">GitHub</a>
       </span>
     </div>
   </footer>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+  </script>
 </body>
 </html>
