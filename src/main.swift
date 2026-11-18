@@ -125,6 +125,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         turboItem.target = self
         turboItem.state = cachedTurboBoostDisabled ? .on : .off
         menu.addItem(turboItem)
+        #else
+        let turboItem: NSMenuItem? = nil
         #endif
 
         menu.addItem(NSMenuItem.separator())
@@ -164,9 +166,29 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         quitItem.target = self
         menu.addItem(quitItem)
 
+        refreshSystemStates(sleepItem: sleepDisabledItem, turboItem: turboItem)
+
         statusItem.menu = menu
         statusItem.button?.performClick(nil)
         statusItem.menu = nil
+    }
+
+    private func refreshSystemStates(sleepItem: NSMenuItem? = nil, turboItem: NSMenuItem? = nil) {
+        DispatchQueue.global(qos: .userInitiated).async { [weak self, weak sleepItem, weak turboItem] in
+            guard let self = self else { return }
+            let sleepDisabled = self.isSleepDisabledInSystem()
+            #if arch(x86_64)
+            let turboDisabled = self.isTurboBoostDisabled()
+            #endif
+            RunLoop.main.perform(inModes: [.common]) {
+                self.cachedSleepDisabled = sleepDisabled
+                sleepItem?.state = sleepDisabled ? .on : .off
+                #if arch(x86_64)
+                self.cachedTurboBoostDisabled = turboDisabled
+                turboItem?.state = turboDisabled ? .on : .off
+                #endif
+            }
+        }
     }
 
     @objc private func selectLanguage(_ sender: NSMenuItem) {
