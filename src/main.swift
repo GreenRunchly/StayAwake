@@ -97,12 +97,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    private func showMenu() {
-        let menu = NSMenu()
-        let statusTitle = isActive
+    private var statusText: String {
+        isActive
             ? t("Perangkat tetap terjaga", "Device will stay awake")
             : t("Perangkat bisa tidur", "Device can go to sleep")
-        let statusMenuItem = NSMenuItem(title: statusTitle, action: nil, keyEquivalent: "")
+    }
+
+    private func showMenu() {
+        let menu = NSMenu()
+        let statusMenuItem = NSMenuItem(title: statusText, action: nil, keyEquivalent: "")
         statusMenuItem.isEnabled = false
         menu.addItem(statusMenuItem)
 
@@ -129,12 +132,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let turboItem: NSMenuItem? = nil
         #endif
 
-        menu.addItem(NSMenuItem.separator())
-
         let launchItem = NSMenuItem(title: t("Buka Otomatis saat Login", "Launch at Login"), action: #selector(toggleLaunchAtLogin), keyEquivalent: "")
         launchItem.target = self
         launchItem.state = isLaunchAtLoginEnabled() ? .on : .off
         menu.addItem(launchItem)
+
+        menu.addItem(NSMenuItem.separator())
 
         let langMenu = NSMenu()
         let langOptions: [(String, AppLanguage)] = [
@@ -245,9 +248,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         } else {
             button.title = isActive ? "Zzz" : "zzz"
         }
-        button.toolTip = isActive
-            ? "StayAwake: ON (Klik untuk matikan, klik kanan untuk menu)"
-            : "StayAwake: OFF (Klik untuk nyalakan, klik kanan untuk menu)"
+        button.toolTip = statusText
     }
 
     private func startCaffeinate() {
