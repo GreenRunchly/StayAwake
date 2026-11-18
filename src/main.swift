@@ -120,10 +120,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         sleepDisabledItem.state = cachedSleepDisabled ? .on : .off
         menu.addItem(sleepDisabledItem)
 
+        #if arch(x86_64)
         let turboItem = NSMenuItem(title: t("Matikan Turbo Boost (Lebih Adem)", "Disable Turbo Boost (Cooler)"), action: #selector(toggleTurboBoost), keyEquivalent: "")
         turboItem.target = self
         turboItem.state = cachedTurboBoostDisabled ? .on : .off
         menu.addItem(turboItem)
+        #endif
 
         menu.addItem(NSMenuItem.separator())
 
@@ -230,7 +232,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         guard caffeinateProcess == nil else { return }
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/usr/bin/caffeinate")
-        process.arguments = ["-i", "-m", "-s"]
+        process.arguments = ["-d", "-i", "-m", "-s"]
         try? process.run()
         caffeinateProcess = process
     }
