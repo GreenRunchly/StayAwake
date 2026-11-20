@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-APP_NAME="StayAwake"
+APP_NAME="DontDoze"
 APP_BUNDLE="${APP_NAME}.app"
 
 mkdir -p "${APP_BUNDLE}/Contents/MacOS" "${APP_BUNDLE}/Contents/Resources"
@@ -11,8 +11,8 @@ if [ -d "resources/DisableTurboBoost.64bits.kext" ]; then
     cp -R "resources/DisableTurboBoost.64bits.kext" "${APP_BUNDLE}/Contents/Resources/"
 fi
 
-swiftc -O -target x86_64-apple-macosx12.0 "src/main.swift" -o "${APP_BUNDLE}/Contents/MacOS/${APP_NAME}_x86_64"
-swiftc -O -target arm64-apple-macosx12.0 "src/main.swift" -o "${APP_BUNDLE}/Contents/MacOS/${APP_NAME}_arm64"
+swiftc -O -target x86_64-apple-macosx12.0 src/*.swift -o "${APP_BUNDLE}/Contents/MacOS/${APP_NAME}_x86_64"
+swiftc -O -target arm64-apple-macosx12.0 src/*.swift -o "${APP_BUNDLE}/Contents/MacOS/${APP_NAME}_arm64"
 lipo -create "${APP_BUNDLE}/Contents/MacOS/${APP_NAME}_x86_64" "${APP_BUNDLE}/Contents/MacOS/${APP_NAME}_arm64" -output "${APP_BUNDLE}/Contents/MacOS/${APP_NAME}"
 rm "${APP_BUNDLE}/Contents/MacOS/${APP_NAME}_x86_64" "${APP_BUNDLE}/Contents/MacOS/${APP_NAME}_arm64"
 codesign --force --sign - "${APP_BUNDLE}"
