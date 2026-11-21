@@ -1,6 +1,28 @@
 import Cocoa
 
 extension AppDelegate {
+    @objc func toggleModeSemua() {
+        if lagiTerjaga || cacheSleepDimatiin {
+            matiinCaffeinate()
+            lagiTerjaga = false
+            if cacheSleepDimatiin && jalaninPmsetAdmin("disablesleep 0") {
+                cacheSleepDimatiin = false
+                lanjutinAplikasiKeSuspend()
+                aturPantauTutupLayar()
+            }
+        } else {
+            nyalainCaffeinate()
+            lagiTerjaga = true
+            if !cacheSleepDimatiin && FileManager.default.fileExists(atPath: "/etc/sudoers.d/dontdoze") {
+                if jalaninPmsetAdmin("disablesleep 1") {
+                    cacheSleepDimatiin = true
+                    aturPantauTutupLayar()
+                }
+            }
+        }
+        updateIkon()
+    }
+
     @objc func toggleLayarAja() {
         if lagiTerjaga {
             matiinCaffeinate()
@@ -70,6 +92,28 @@ extension AppDelegate {
             if alert.runModal() == .alertFirstButtonReturn, pasangFileSudoers(), jalaninPmsetAdmin(target) {
                 cacheNilaiDaya[opsi.key] = nilaiBaru
             }
+        }
+    }
+
+    @objc func resetOpsiDaya() {
+        let konfirmasi = NSAlert()
+        konfirmasi.alertStyle = .informational
+        konfirmasi.messageText = teks("Reset Manajemen Daya ke Default?", "Reset Power Management to Defaults?")
+        konfirmasi.informativeText = teks(
+            "Ini akan mengembalikan pengaturan standby, autopoweroff, hibernatemode, disksleep, powernap, womp, proximitywake, tcpkeepalive, dan ttyskeepawake ke bawaan macOS.",
+            "This will restore standby, autopoweroff, hibernatemode, disksleep, powernap, womp, proximitywake, tcpkeepalive, and ttyskeepawake to macOS defaults."
+        )
+        konfirmasi.addButton(withTitle: teks("Reset", "Reset"))
+        konfirmasi.addButton(withTitle: teks("Batal", "Cancel"))
+        guard konfirmasi.runModal() == .alertFirstButtonReturn else { return }
+
+        let defaultArgs = daftarOpsiDaya
+            .filter { cacheNilaiDaya[$0.key] != nil }
+            .map { "\($0.key) \($0.nilaiAktif)" }
+            .joined(separator: " ")
+        guard !defaultArgs.isEmpty else { return }
+        if jalaninPmsetAdmin(defaultArgs) {
+            cacheNilaiDaya = parseNilaiPmset(di: bacaOutputPmset())
         }
     }
 

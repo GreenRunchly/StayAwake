@@ -12,6 +12,10 @@
 [![Architecture](https://img.shields.io/badge/arch-Universal%20(x86__64%20%7C%20arm64)-blue.svg)](https://github.com/IqyRily/stay-awake)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
+<br>
+
+[![Download Latest Release](https://img.shields.io/badge/Download-DontDoze--macOS.zip-2ea44f?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/IqyRily/stay-awake/releases/latest/download/DontDoze-macOS.zip)
+
 </div>
 
 ---
@@ -68,12 +72,12 @@ open DontDoze.app
 
 ## Usage <a name="usage"></a>
 
-- **Left-Click Icon:** Quickly toggle **Keep Device Awake** / **Allow Device Sleep** (runs `caffeinate -d -i -m -s` — no password required).
+- **Left-Click Icon:** Quickly toggle **Keep Device Awake** / **Allow Device Sleep** (runs `caffeinate -d -i -m -s` and sets `pmset -a disablesleep 1/0` when the Helper is installed).
 - **Right-Click Icon:** Open the menu:
   - **Turbo Boost Status** *(Intel `x86_64` only)*: Switch between **Always Enabled**, **Disable When Lid Close**, or **Always Disabled**.
   - **Preferences:**
     - **Launch at Login:** Start DontDoze automatically via `~/Library/LaunchAgents/com.rizki.DontDoze.plist`.
-    - **Advanced Mode:** Unlocks independent **Keep Display Awake** (`caffeinate`) and **Keep System Awake on Lid Close** (`pmset -a disablesleep`) toggles, **Suspend Running Apps** (`SIGSTOP`/`SIGCONT` on lid close + `~/Library/Logs/DontDoze.log`), and **Power Management** (`standby`, `autopoweroff`, `hibernatemode`, `disksleep`, `powernap`, `womp`, `proximitywake`, `tcpkeepalive`, `ttyskeepawake`).
+    - **Advanced Mode:** Unlocks independent **Keep Display Awake** (`caffeinate`) and **Keep System Awake on Lid Close** (`pmset -a disablesleep`) toggles, **Suspend Running Apps** (`SIGSTOP`/`SIGCONT` on lid close + `~/Library/Logs/DontDoze.log`), and **Power Management** (`standby`, `autopoweroff`, `hibernatemode`, `disksleep`, `powernap`, `womp`, `proximitywake`, `tcpkeepalive`, `ttyskeepawake`, plus **Reset to Defaults...**).
     - **Install / Remove Helper...:** One-time `/etc/sudoers.d/dontdoze` setup (prompted only when using features that need `sudo`, such as `pmset` or Turbo Boost), plus clean uninstallation.
     - **Menu Bar Icon:** Choose **Default** (`Zzz`), **MacBook**, or **Coffee Cup**.
     - **Language:** Follow System, Indonesia, or English.

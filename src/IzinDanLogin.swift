@@ -10,6 +10,43 @@ extension AppDelegate {
         }
     }
 
+    func tanyaPasangIzinAwal() {
+        let pathSudoers = "/etc/sudoers.d/dontdoze"
+        guard !FileManager.default.fileExists(atPath: pathSudoers),
+              !UserDefaults.standard.bool(forKey: keyUdahTanyaSudoers) else {
+            return
+        }
+        UserDefaults.standard.set(true, forKey: keyUdahTanyaSudoers)
+        NSApp.activate(ignoringOtherApps: true)
+
+        let alert = NSAlert()
+        alert.alertStyle = .informational
+        alert.messageText = teks("Pasang Helper Sekali di Awal?", "Install Helper Once?")
+        alert.informativeText = teks(
+            """
+            Agar fitur cegah tidur saat layar ditutup (pmset) dan kontrol Turbo Boost (kextload/kextunload) bisa berjalan otomatis tanpa meminta password berulang kali—termasuk saat layar ditutup—DontDoze perlu membuat aturan terbatas di /etc/sudoers.d/dontdoze.
+
+            Kenapa aman?
+            • Hanya mengizinkan perintah spesifik: pmset (pengaturan daya), kextload, kextunload, dan chown kext.
+            • Bukan akses admin penuh dan tidak mengubah file sistem lain.
+            • Opsional: Anda bisa klik "Nanti Saja" jika hanya memakai mode jaga tetap menyala biasa, atau menghapus izin kapan saja lewat menu "Hapus Helper...".
+            """,
+            """
+            To let Lid-Close Sleep Prevention (pmset) and automatic Turbo Boost control (kextload/kextunload) run silently without repeated password prompts—including when the lid is closed—DontDoze needs to create a restricted rule at /etc/sudoers.d/dontdoze.
+
+            Why is this safe?
+            • It only allows specific commands: pmset (power settings), kextload, kextunload, and kext chown.
+            • It does not grant full admin access or modify other system files.
+            • Optional: click "Later" if you only need basic Keep Awake mode, and you can remove this anytime via "Remove Helper...".
+            """
+        )
+        alert.addButton(withTitle: teks("Pasang Helper", "Install Helper"))
+        alert.addButton(withTitle: teks("Nanti Saja", "Later"))
+        if alert.runModal() == .alertFirstButtonReturn {
+            _ = pasangFileSudoers()
+        }
+    }
+
     @objc func hapusIzin() {
         let konfirmasi = NSAlert()
         konfirmasi.messageText = teks("Hapus Izin & Bersihkan?", "Remove Permissions & Clean Up?")

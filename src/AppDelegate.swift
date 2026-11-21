@@ -12,6 +12,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     let keyIkonMenuBar = "MenuBarIcon"
     let keySuspendTutupLayar = "FreezeAppsOnLidClose"
     let keyModeTurboBoost = "TurboBoostMode"
+    let keyUdahTanyaSudoers = "HasPromptedSudoersSetup"
     let keyModeLanjutan = "AdvancedMode"
     let keySisaPIDKeSuspend = "LeftoverFrozenPIDs"
 
@@ -114,6 +115,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
         aturPantauTutupLayar()
+        DispatchQueue.main.async {
+            self.tanyaPasangIzinAwal()
+        }
     }
 
     func applicationWillTerminate(_ notification: Notification) {
@@ -130,7 +134,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if event.type == .rightMouseUp || event.modifierFlags.contains(.option) {
             tampilinMenu()
         } else {
-            toggleLayarAja()
+            toggleModeSemua()
         }
     }
 
@@ -182,10 +186,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             menu.addItem(itemSistem)
             itemSleepLayar = itemSistem
         } else {
-            let judulToggle = lagiTerjaga
+            let judulToggle = (lagiTerjaga || cacheSleepDimatiin)
                 ? teks("Izinkan Perangkat Tidur", "Allow Device Sleep")
                 : teks("Jaga Tetap Menyala", "Keep Device Awake")
-            let itemToggle = NSMenuItem(title: judulToggle, action: #selector(toggleLayarAja), keyEquivalent: "")
+            let itemToggle = NSMenuItem(title: judulToggle, action: #selector(toggleModeSemua), keyEquivalent: "")
             itemToggle.target = self
             menu.addItem(itemToggle)
         }
@@ -254,6 +258,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 menuDaya.addItem(item)
                 daftarItemDaya[opsi.key] = item
             }
+            menuDaya.addItem(NSMenuItem.separator())
+            let itemReset = NSMenuItem(title: teks("Reset ke Default...", "Reset to Defaults..."), action: #selector(resetOpsiDaya), keyEquivalent: "")
+            itemReset.target = self
+            menuDaya.addItem(itemReset)
+
             let parentDaya = NSMenuItem(title: teks("Manajemen Daya", "Power Management"), action: nil, keyEquivalent: "")
             parentDaya.submenu = menuDaya
             menu.addItem(parentDaya)
