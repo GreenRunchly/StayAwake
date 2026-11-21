@@ -60,6 +60,6 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
-StayAwake.app/
-StayAwake-macOS.zip
+DontDoze.app/
+DontDoze-macOS.zip
 .DS_Store
