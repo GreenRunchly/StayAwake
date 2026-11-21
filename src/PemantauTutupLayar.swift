@@ -15,10 +15,11 @@ extension AppDelegate {
     }
 
     var butuhPantauTutupLayar: Bool {
+        let butuhSafetyNet = cacheSleepDimatiin || (!modeLanjutan && lagiTerjaga) || suspendPasTutupLayar
         #if arch(x86_64)
-        return suspendPasTutupLayar || modeTurboBoost == .matiPasTutupLayar
+        return butuhSafetyNet || modeTurboBoost == .matiPasTutupLayar
         #else
-        return suspendPasTutupLayar
+        return butuhSafetyNet
         #endif
     }
 

@@ -9,22 +9,22 @@
   <meta name="author" content="IqyRily" />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0b0d12" />
-  <link rel="canonical" href="https://iqyrily.github.io/stay-awake/" />
+  <link rel="canonical" href="https://iqyrily.github.io/dont-doze/" />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://iqyrily.github.io/stay-awake/" />
+  <meta property="og:url" content="https://iqyrily.github.io/dont-doze/" />
   <meta property="og:site_name" content="DontDoze" />
   <meta property="og:title" content="DontDoze — Keep Your Mac Awake from the Menu Bar" />
   <meta property="og:description" content="Stop your Mac from falling asleep during downloads, presentations, or long tasks—all from one simple Zzz icon in your menu bar." />
-  <meta property="og:image" content="https://iqyrily.github.io/stay-awake/banner.png" />
+  <meta property="og:image" content="https://iqyrily.github.io/dont-doze/banner.png" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:url" content="https://iqyrily.github.io/stay-awake/" />
+  <meta name="twitter:url" content="https://iqyrily.github.io/dont-doze/" />
   <meta name="twitter:title" content="DontDoze — Keep Your Mac Awake from the Menu Bar" />
   <meta name="twitter:description" content="Stop your Mac from falling asleep during downloads, presentations, or long tasks—all from one simple Zzz icon in your menu bar." />
-  <meta name="twitter:image" content="https://iqyrily.github.io/stay-awake/banner.png" />
+  <meta name="twitter:image" content="https://iqyrily.github.io/dont-doze/banner.png" />
 
   <link rel="icon" type="image/png" href="app-icon.png" />
   <style>
@@ -35,8 +35,9 @@
       --border: rgba(255, 255, 255, 0.08);
       --text: #f3f5f8;
       --muted: #9aa4b2;
-      --accent: #3b82f6;
-      --accent-glow: rgba(59, 130, 246, 0.25);
+      --accent: #fee491;
+      --accent-hover: #fedc6e;
+      --accent-glow: rgba(254, 228, 145, 0.22);
       --green: #22c55e;
       --amber: #f59e0b;
       --radius: 16px;
@@ -123,23 +124,21 @@
       padding: 6px 14px;
       border-radius: 8px;
       background: var(--accent);
-      color: #fff !important;
+      color: #141925 !important;
       font-weight: 600;
       font-size: 0.86rem;
     }
 
     .nav-download:hover {
-      background: #2563eb;
+      background: var(--accent-hover);
     }
 
     /* Hero */
     .hero {
-      min-height: calc(100vh - 64px);
-      min-height: calc(100svh - 64px);
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      padding: 48px 0;
+      align-items: center;
+      padding: 44px 0 12px;
       text-align: center;
     }
 
@@ -165,17 +164,17 @@
     }
 
     h1 {
-      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-size: clamp(2rem, 3.8vw, 2.9rem);
       font-weight: 800;
       letter-spacing: -0.035em;
-      line-height: 1.1;
-      margin-bottom: 20px;
+      line-height: 1.12;
+      margin-bottom: 14px;
     }
 
     .hero p {
-      max-width: 650px;
-      margin: 0 auto 34px;
-      font-size: 1.12rem;
+      max-width: 560px;
+      margin: 0 auto 26px;
+      font-size: 1rem;
       color: var(--muted);
     }
 
@@ -183,8 +182,21 @@
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 14px;
-      margin-bottom: 56px;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .hero-banner {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .hero-banner img {
+      width: min(100%, 880px);
+      height: auto;
+      border-radius: 18px;
+      filter: drop-shadow(0 28px 60px rgba(0, 0, 0, 0.55));
     }
 
     .btn {
@@ -205,12 +217,12 @@
 
     .btn-primary {
       background: var(--accent);
-      color: #fff;
+      color: #141925;
       box-shadow: 0 8px 28px var(--accent-glow);
     }
 
     .btn-primary:hover {
-      background: #2563eb;
+      background: var(--accent-hover);
     }
 
     .btn-secondary {
@@ -312,7 +324,7 @@
     /* Features Grid */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 18px;
     }
 
@@ -328,6 +340,29 @@
     .card-icon {
       font-size: 1.4rem;
       margin-bottom: 12px;
+    }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .card-head .card-icon {
+      margin-bottom: 0;
+    }
+
+    .card-badge {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: rgba(254, 228, 145, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(254, 228, 145, 0.28);
+      white-space: nowrap;
     }
 
     .card h3 {
@@ -427,6 +462,12 @@
       text-underline-offset: 3px;
     }
 
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
     @media (max-width: 760px) {
       .build-box {
         grid-template-columns: 1fr;
@@ -440,6 +481,12 @@
         padding: 12px 0;
       }
     }
+
+    @media (max-width: 600px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
@@ -451,8 +498,8 @@
       </a>
       <nav class="nav-links">
         <a href="#features">Features</a>
-        <a href="https://github.com/IqyRily/stay-awake" target="_blank" rel="noopener" class="nav-github">GitHub</a>
-        <a href="https://github.com/IqyRily/stay-awake/releases/latest" target="_blank" rel="noopener" class="nav-download">Download</a>
+        <a href="https://github.com/IqyRily/dont-doze" target="_blank" rel="noopener" class="nav-github">GitHub</a>
+        <a href="https://github.com/IqyRily/dont-doze/releases/latest" target="_blank" rel="noopener" class="nav-download">Download</a>
       </nav>
     </div>
   </header>
@@ -465,13 +512,17 @@
       </p>
 
       <div class="cta-group">
-        <a class="btn btn-primary" href="https://github.com/IqyRily/stay-awake/releases/latest" target="_blank" rel="noopener">
+        <a class="btn btn-primary" href="https://github.com/IqyRily/dont-doze/releases/latest/download/DontDoze-macOS.zip" target="_blank" rel="noopener">
           <i data-lucide="download" style="width: 18px; height: 18px;"></i>
           Download for macOS
         </a>
-        <a class="btn btn-secondary" href="https://github.com/IqyRily/stay-awake" target="_blank" rel="noopener">
+        <a class="btn btn-secondary" href="https://github.com/IqyRily/dont-doze" target="_blank" rel="noopener">
           View on GitHub
         </a>
+      </div>
+
+      <div class="hero-banner">
+        <img src="banner.png" alt="DontDoze menu bar preview" />
       </div>
     </section>
 
@@ -483,19 +534,22 @@
         <div class="card">
           <div class="card-icon"><i data-lucide="coffee"></i></div>
           <h3>One-Click Awake</h3>
-          <p>Click the <span style="display:inline-flex;align-items:center;vertical-align:middle;padding:2px 6px;border-radius:6px;background:var(--surface-2);border:1px solid var(--border);" aria-label="Zzz menu bar icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3h7l-7 8h7"/><path d="M14 9h6l-6 7h6"/><path d="M7 15h5l-5 6h5"/></svg></span> icon once to keep your screen and Mac awake. Click again to turn it off—no password needed.</p>
-        </div>
-
-        <div class="card">
-          <div class="card-icon"><i data-lucide="laptop"></i></div>
-          <h3>Keep Running with Lid Closed</h3>
-          <p>Right-click the icon to stop your Mac from sleeping even when you close your laptop lid.</p>
+          <p>Click the <span style="display:inline-flex;align-items:center;vertical-align:middle;padding:2px 6px;border-radius:6px;background:var(--surface-2);border:1px solid var(--border);" aria-label="Zzz menu bar icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3h7l-7 8h7"/><path d="M14 9h6l-6 7h6"/><path d="M7 15h5l-5 6h5"/></svg></span> icon once to keep your Mac awake—even with the lid closed.</p>
         </div>
 
         <div class="card">
           <div class="card-icon"><i data-lucide="snowflake"></i></div>
-          <h3>Cooler &amp; Quieter Mac</h3>
-          <p>Optionally turn off Intel Turbo Boost from the menu to reduce heat and fan noise on Intel MacBooks.</p>
+          <h3>Turbo Boost Control</h3>
+          <p>Disable Intel Turbo Boost to reduce heat and fan noise.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div class="card-icon"><i data-lucide="sliders"></i></div>
+            <span class="card-badge">Advanced Mode</span>
+          </div>
+          <h3>Power Management</h3>
+          <p>Separate lid-close, app suspend, wake, sleep, and reset controls.</p>
         </div>
       </div>
     </section>
@@ -505,7 +559,7 @@
     <div class="container footer-inner">
       <span>DontDoze — Open-source macOS menu bar utility</span>
       <span>
-        <a href="https://github.com/IqyRily/stay-awake" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/IqyRily/dont-doze" target="_blank" rel="noopener">GitHub</a>
       </span>
     </div>
   </footer>

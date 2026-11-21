@@ -8,7 +8,6 @@ extension AppDelegate {
             if cacheSleepDimatiin && jalaninPmsetAdmin("disablesleep 0") {
                 cacheSleepDimatiin = false
                 lanjutinAplikasiKeSuspend()
-                aturPantauTutupLayar()
             }
         } else {
             nyalainCaffeinate()
@@ -16,10 +15,10 @@ extension AppDelegate {
             if !cacheSleepDimatiin && FileManager.default.fileExists(atPath: "/etc/sudoers.d/dontdoze") {
                 if jalaninPmsetAdmin("disablesleep 1") {
                     cacheSleepDimatiin = true
-                    aturPantauTutupLayar()
                 }
             }
         }
+        aturPantauTutupLayar()
         updateIkon()
     }
 
@@ -31,6 +30,7 @@ extension AppDelegate {
             nyalainCaffeinate()
             lagiTerjaga = true
         }
+        aturPantauTutupLayar()
         updateIkon()
     }
 

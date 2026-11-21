@@ -393,11 +393,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc func toggleModeLanjutan() {
         modeLanjutan.toggle()
-        if !modeLanjutan && suspendPasTutupLayar {
-            suspendPasTutupLayar = false
-            lanjutinAplikasiKeSuspend()
-            aturPantauTutupLayar()
+        if !modeLanjutan {
+            if suspendPasTutupLayar {
+                suspendPasTutupLayar = false
+                lanjutinAplikasiKeSuspend()
+            }
+            if lagiTerjaga && !cacheSleepDimatiin && FileManager.default.fileExists(atPath: "/etc/sudoers.d/dontdoze") {
+                pastiinCegahSleepNyala()
+            }
         }
+        aturPantauTutupLayar()
         updateIkon()
     }
 
